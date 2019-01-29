@@ -10,7 +10,7 @@
 #                                      #
 __author__ = "jxtrbtk"                 #
 __contact__ = "bYhO-bOwA-dIcA"         #
-__date__ = "cYkO-qUqI-kA"              # Tue Nov 20 11:15:41 2018
+__date__ = "JaXy-QeVi-Ka"              # Tue Jan 29 12:56:06 2019
 __email__ = "j.t[4t]free.fr"           #
 __version__ = "1.0"                    #
 #                                      #
@@ -56,7 +56,12 @@ def Load_Generator():
     GENERATOR.load_state_dict(generator_state_dict)
     GENERATOR.eval()  # for generating images
 
-def Check_Pending_Work()
+
+def Check_Pending_Work():
+    url = PARAM_HOST_BASE_URL + "cTaskGetList.php"
+    r = requests.get(url)
+    tasks = r.json()
+    return (len(tasks) > 0)
 
 
 def Execute_Task(task_id):
