@@ -171,8 +171,8 @@ def Post_Image(idx, code, step):
     with io.open(img_path, 'rb') as f: 
         r = requests.post(url, data=payload, files={'data': f})
         print(r.text)
-#        if(r.text=="OK"):
-#            os.remove(img_path)
+        if(r.text=="OK"):
+            os.remove(img_path)
 
 
 def Initialize_Project(code):
