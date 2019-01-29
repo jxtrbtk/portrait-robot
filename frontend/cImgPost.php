@@ -16,5 +16,13 @@ else
 	echo("name no match");
 }
 
+if (intval($step) >= 2)
+{
+    $step_old = strval(intval($step)-2);
+    $filename_old = "IMG_".$side."_".$code."_".$step_old.".png";
+	$target_dir = "data/work/";
+    if(file_exists($target_dir.$filename)) {unlink($target_dir.$filename_old);}
+}
+
 ?>
 OK
