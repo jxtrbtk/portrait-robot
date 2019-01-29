@@ -380,7 +380,10 @@
     			</tr>
     		</table>
     	</section>
-        <footer><hr /><div id="message" for="message">...</div></footer>
+        <footer>
+        <hr /><div id="message">...</div>
+        <div style="padding-top:20px"><a target=_blank href="https://github/jxtrbtk/portrait-robot/"><img src="github.png"/>&nbsp;sources</a></div>
+        </footer>
         </div>
     </body>
 </html>
