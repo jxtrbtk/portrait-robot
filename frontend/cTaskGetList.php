@@ -10,7 +10,10 @@ while($file = readdir($dir))
     {
         if(file_exists ($path ."/". $file))
         {
-            print($separator."\"".str_replace("TASK_","",explode(".",$file)[0])."\"");
+	    $tab_filename = explode(".",$file);
+	    $base_name = $tab_filename[0];
+	    $task_id = str_replace("TASK_","",$base_name);
+	    print($separator."\"".$task_id."\"");
             $idx++;
             $separator=",";
         }

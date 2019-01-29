@@ -34,6 +34,7 @@ import SyllabInt
 
 PARAM_DATA_FOLDER = "data"
 PARAM_HOST_BASE_URL = "http://localhost/portrait/"
+PARAM_HOST_BASE_URL = "http://yeah.free.fr/portrait/"
 
 GENERATOR = None
 
