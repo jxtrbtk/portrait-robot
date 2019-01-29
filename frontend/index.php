@@ -382,7 +382,7 @@
     	</section>
         <footer>
         <hr /><div id="message">...</div>
-        <div style="padding-top:20px"><a target=_blank href="https://github/jxtrbtk/portrait-robot/"><img src="github.png"/>&nbsp;sources</a></div>
+        <div style="padding-top:16"><a target=_blank href="https://github.com/jxtrbtk/portrait-robot/"><img src="github.png"/>&nbsp;sources</a></div>
         </footer>
         </div>
     </body>
