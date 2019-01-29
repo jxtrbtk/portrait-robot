@@ -33,7 +33,7 @@ import SyllabInt
 
 
 PARAM_DATA_FOLDER = "data"
-PARAM_HOST_BASE_URL = "http://localhost/portrait/"
+#PARAM_HOST_BASE_URL = "http://localhost/portrait/"
 PARAM_HOST_BASE_URL = "http://yeah.free.fr/portrait/"
 
 GENERATOR = None
@@ -168,11 +168,13 @@ def Post_Image(idx, code, step):
     img_path = os.path.join(path, img_name)
     payload = {'name': img_name, 'side': idx, 'code': code, 'step': step}
     url = PARAM_HOST_BASE_URL + "cImgPost.php"
+    answer = ""
     with io.open(img_path, 'rb') as f: 
         r = requests.post(url, data=payload, files={'data': f})
         print(r.text)
-        if(r.text=="OK"):
-            os.remove(img_path)
+        answer = r.text
+    if(answer =="OK"):
+        os.remove(img_path)
 
 
 def Initialize_Project(code):
