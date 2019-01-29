@@ -131,7 +131,7 @@ def Move_Project(code, side):
 
     delta = np.random.uniform(-1, 1, size=(sample_size, model.z_size))
     delta = torch.from_numpy(delta).float()
-    delta[delta<0] = vector0[delta<0]
+    delta[delta>0] = vector0[delta>0]
     vector1 = vector0*(1-coeff)+delta*coeff
     
 #    delta = delta * (-1.0)
