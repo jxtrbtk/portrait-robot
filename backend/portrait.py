@@ -153,16 +153,18 @@ def Move_Project(code, side):
 def Generate_Images(code):
     path = os.path.join(PARAM_DATA_FOLDER, "work", code)
     filepath = os.path.join(path, "step.txt")
-    step = Read_File(filepath)
-    filepath = os.path.join(path, "vectors.p")
-    vectors = pickle.load(open(filepath, "rb"))
-    with torch.no_grad():
-        for idx, vector in enumerate(vectors):
-            img = GENERATOR(vector)
-            img_name = "IMG_{}_{}_{}.png".format(idx+1, code, step)
-            img_path = os.path.join(path, img_name)
-            save_image(img, img_path, normalize=True)
-            Post_Image(idx+1, code, step)
+    step = None
+    if os.path.exists(filepath):
+        step = Read_File(filepath)
+        filepath = os.path.join(path, "vectors.p")
+        vectors = pickle.load(open(filepath, "rb"))
+        with torch.no_grad():
+            for idx, vector in enumerate(vectors):
+                img = GENERATOR(vector)
+                img_name = "IMG_{}_{}_{}.png".format(idx+1, code, step)
+                img_path = os.path.join(path, img_name)
+                save_image(img, img_path, normalize=True)
+                Post_Image(idx+1, code, step)
     return step
 
 def Post_Image(idx, code, step):
