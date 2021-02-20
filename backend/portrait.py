@@ -12,7 +12,7 @@ __author__ = "jxtrbtk"                 #
 __contact__ = "bYhO-bOwA-dIcA"         #
 __date__ = "JaXy-QeVi-Ka"              # Tue Jan 29 12:56:06 2019
 __email__ = "j.t[4t]free.fr"           #
-__version__ = "1.0"                    #
+__version__ = "2.0"                    #
 #                                      #
 # ##################################79#########################################
 import os
@@ -21,10 +21,10 @@ import time
 import requests
 import json
 import torch
-import cv2
+# import cv2
 import pickle 
 import numpy as np
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 from torchvision.utils import save_image
 
 import model
@@ -44,9 +44,12 @@ def Main():
     url = PARAM_HOST_BASE_URL + "cTaskGetList.php"
     r = requests.get(url)
     tasks = r.json()
+    done = 0
     for task in tasks:
         task_id = task.split(".")[0]
         Execute_Task(task_id)
+        done = 1
+    return done
 
 
 def Load_Generator():
@@ -88,9 +91,11 @@ def Execute_Task(task_id):
         code = command["code"]
         print("  code: {}".format(code))
         step = Generate_Images(code)
+        score = Get_Score(code)
         print(" - generated")
         params += "&code=" + code
         params += "&step=" + str(step)
+        params += "&score=" + "{:.16f}".format(score*100)
 
     if command["action"] == "select":
         code = command["code"]
@@ -98,11 +103,13 @@ def Execute_Task(task_id):
         print("  code: {}".format(code))
         print("  side: {}".format(side))
         step = Move_Project(code, side)        
+        score = Get_Score(code)
         print(" - moved")
         Generate_Images(code)
         print(" - generated")
         params += "&code=" + code
         params += "&step=" + str(step)
+        params += "&score=" + "{:.16f}".format(score*100)
 
     url = PARAM_HOST_BASE_URL + "cTaskFeedback.php?id="+task_id + params
     requests.get(url)
@@ -117,7 +124,8 @@ def Move_Project(code, side):
 
     filepath = os.path.join(path, "vectors.p")
     vectors = pickle.load(open(filepath, "rb"))
-    vector0 = vectors[int(side)-1]
+    vector_target   = vectors[0]          
+    vector_selected = vectors[int(side)]
 
     sample_size=1
     coeff = (0.99**step)
@@ -128,27 +136,22 @@ def Move_Project(code, side):
 
     delta = np.random.uniform(-1, 1, size=(sample_size, model.z_size))
     delta = torch.from_numpy(delta).float()
-    delta[mask<0] = vector0[mask<0]
-    vector1 = vector0*(1-coeff)+delta*coeff
+    delta[mask<0] = vector_selected[mask<0]
+    vector_left = vector_selected*(1-coeff)+delta*coeff
 #    vector1 = vector0*(0.5)+vector2*(0.5)
 
     delta = np.random.uniform(-1, 1, size=(sample_size, model.z_size))
     delta = torch.from_numpy(delta).float()
-    delta[mask<0] = vector0[mask<0]
-    vector2 = vector0*(1-coeff)+delta*coeff
+    delta[mask<0] = vector_selected[mask<0]
+    vector_right = vector_selected*(1-coeff)+delta*coeff
     
 #    delta = delta * (-1.0)
 #    vector1 = vector0*(1-coeff)+delta*coeff
 
-    vectors = (vector1, vector0, vector2)
+    vectors = (vector_target, vector_left, vector_selected, vector_right)
     pickle.dump(vectors, open(filepath, "wb"))
 
     return step
-
-
-
-#    pickle.dump(vectors, open(filepath, "wb"))
-
 
 def Generate_Images(code):
     path = os.path.join(PARAM_DATA_FOLDER, "work", code)
@@ -161,10 +164,10 @@ def Generate_Images(code):
         with torch.no_grad():
             for idx, vector in enumerate(vectors):
                 img = GENERATOR(vector)
-                img_name = "IMG_{}_{}_{}.png".format(idx+1, code, step)
+                img_name = "IMG_{}_{}_{}.png".format(idx, code, step)
                 img_path = os.path.join(path, img_name)
                 save_image(img, img_path, normalize=True)
-                Post_Image(idx+1, code, step)
+                Post_Image(idx, code, step)
     return step
 
 def Post_Image(idx, code, step):
@@ -189,9 +192,20 @@ def Initialize_Project(code):
     filepath = os.path.join(path, "step.txt")
     Write_File(filepath, "0")
     filepath = os.path.join(path, "vectors.p")
-    vectors = (Create_New_Vector(), Create_New_Vector(), Create_New_Vector())
+    vectors = (Create_New_Vector(), Create_New_Vector(), Create_New_Vector(), Create_New_Vector())
     pickle.dump(vectors, open(filepath, "wb"))
 
+    
+def Get_Score(code):
+    path = os.path.join(PARAM_DATA_FOLDER, "work", code)
+    filepath = os.path.join(path, "vectors.p")
+    score = 0
+    if os.path.exists(filepath):
+        filepath = os.path.join(path, "vectors.p")
+        vectors = pickle.load(open(filepath, "rb"))
+        score = np.float(1-torch.sum((vectors[0]-vectors[2])**2) / 256)
+    return score
+    
 
 def Create_New_Vector():
     sample_size=1
@@ -222,10 +236,13 @@ def Read_File(filepath):
 if __name__ == "__main__":
 
     if Check_Pending_Work():
-        for i in range(0,100):
+        i = 0 
+        while i < 3:
+            i += 1
             print(i)
-            Main()
-            time.sleep(3)
+            d = Main()
+            if d == 1: i = 0
+            time.sleep(7)
  
     
     
