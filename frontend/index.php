@@ -26,6 +26,7 @@
             taskFlag=parseInt(val);
             var msgBox = document.getElementById('message');
             var scoreBox = document.getElementById('score');
+            var oldscoreBox = document.getElementById('old_score');
             var statusBox = document.getElementById('dacode');
             var statusBtn = document.getElementById('s0');
             var mainZone = document.getElementById('main');
@@ -133,6 +134,7 @@
                 badge3.src='data/work/IMG_3_'+projectCode+'_'+projectStep+'.png';
 		if(projectScore!='')
 		{ 
+			oldscoreBox.innerHTML =  scoreBox.innerHTML; 
 			scoreBox.innerHTML =  projectScore + '%'; 
 		}
                 statusBtn.disabled = true; 
@@ -344,7 +346,8 @@
                 <tr>
                     <td style="vertical-align:top;" width=342>
                         <h1>Portrait-Robot</h1>
-			<h3><div id="score">...</div><h3>
+			<h3><div id="score">...</div></h3>
+			<div id="old_score">...</div>
                     </td>
                     <td rowspan=2>
                         <img id="target" src="blank.png" style="padding:5px" />
