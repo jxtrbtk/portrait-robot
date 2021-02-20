@@ -137,13 +137,13 @@ def Move_Project(code, side):
     delta = np.random.uniform(-1, 1, size=(sample_size, model.z_size))
     delta = torch.from_numpy(delta).float()
     delta[mask<0] = vector_selected[mask<0]
-    vector_left = vector_selected*(1-coeff)+delta*coeff
+    vector_left  = vector_selected*(1-coeff)-delta*coeff
+    vector_right = vector_selected*(1-coeff)+delta*coeff
 #    vector1 = vector0*(0.5)+vector2*(0.5)
 
-    delta = np.random.uniform(-1, 1, size=(sample_size, model.z_size))
-    delta = torch.from_numpy(delta).float()
-    delta[mask<0] = vector_selected[mask<0]
-    vector_right = vector_selected*(1-coeff)+delta*coeff
+    # delta = np.random.uniform(-1, 1, size=(sample_size, model.z_size))
+    # delta = torch.from_numpy(delta).float()
+    # delta[mask<0] = vector_selected[mask<0]
     
 #    delta = delta * (-1.0)
 #    vector1 = vector0*(1-coeff)+delta*coeff
