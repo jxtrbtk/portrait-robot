@@ -42,7 +42,7 @@ GENERATOR = None
 def Main():
     Load_Generator()
     url = PARAM_HOST_BASE_URL + "cTaskGetList.php"
-    r = requests.get(url)
+    r = requests.get(url, timeout=60)
     tasks = r.json()
     done = 0
     for task in tasks:
@@ -63,7 +63,7 @@ def Load_Generator():
 
 def Check_Pending_Work():
     url = PARAM_HOST_BASE_URL + "cTaskGetList.php"
-    r = requests.get(url)
+    r = requests.get(url, timeout=60)
     tasks = r.json()
     return (len(tasks) > 0)
 
@@ -71,7 +71,7 @@ def Check_Pending_Work():
 def Execute_Task(task_id):
     print("task : {}".format(task_id))
     url = PARAM_HOST_BASE_URL + "cTaskGet.php?id="+task_id
-    r = requests.get(url)
+    r = requests.get(url, timeout=60)
     command = r.json()
     params = ""
 
@@ -112,7 +112,7 @@ def Execute_Task(task_id):
         params += "&score=" + "{:.16f}".format(score*100)
 
     url = PARAM_HOST_BASE_URL + "cTaskFeedback.php?id="+task_id + params
-    requests.get(url)
+    requests.get(url, timeout=60)
 
 def Move_Project(code, side):
     path = os.path.join(PARAM_DATA_FOLDER, "work", code)
@@ -178,7 +178,7 @@ def Post_Image(idx, code, step):
     url = PARAM_HOST_BASE_URL + "cImgPost.php"
     answer = ""
     with io.open(img_path, 'rb') as f: 
-        r = requests.post(url, data=payload, files={'data': f})
+        r = requests.post(url, data=payload, files={'data': f}, timeout=60)
         print(r.text)
         answer = r.text
     if(answer =="OK"):
