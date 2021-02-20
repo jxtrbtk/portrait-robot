@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <title>Portrait-Robot</title>
+        <meta name="description" content="This person does not exist" />
         <meta charset="utf-8">
         <meta name="viewport"  content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -17,15 +18,18 @@
          var codeDefault = '....-....-..';
          var projectCode = '';
          var projectStep = '';
+         var projectScore = '';
          var projectSide = '';
                   
          function setTaskFlag(val)
          {
             taskFlag=parseInt(val);
             var msgBox = document.getElementById('message');
+            var scoreBox = document.getElementById('score');
             var statusBox = document.getElementById('dacode');
             var statusBtn = document.getElementById('s0');
             var mainZone = document.getElementById('main');
+            var target = document.getElementById('target');
             var badge1 = document.getElementById('badge1');    			 
             var badge2 = document.getElementById('badge2');    			 
             var badge3 = document.getElementById('badge3');    			 
@@ -123,9 +127,14 @@
             }
             if(taskFlag==6)
             { 
+                target.src='data/work/IMG_0_'+projectCode+'_'+projectStep+'.png';
                 badge1.src='data/work/IMG_1_'+projectCode+'_'+projectStep+'.png';
                 badge2.src='data/work/IMG_2_'+projectCode+'_'+projectStep+'.png';
                 badge3.src='data/work/IMG_3_'+projectCode+'_'+projectStep+'.png';
+		if(projectScore!='')
+		{ 
+			scoreBox.innerHTML =  projectScore + '%'; 
+		}
                 statusBtn.disabled = true; 
                 statusBox.value = projectCode; 
                 statusBox.style.backgroundColor = 'rgb(132, 255, 138)';
@@ -302,7 +311,8 @@
                     var feedback = xhr.responseText;
                     projectCode = feedback.split('_')[0];
                     projectStep = feedback.split('_')[1];               
-                    taskMessage = 'project code : ' + projectCode + ' v.'+ projectStep;
+                    projectScore = feedback.split('_')[2];               
+                    taskMessage = 'project code : ' + projectCode + ' v.'+ projectStep + ' score:'+ projectScore;
                     setTaskFlag(6);
                     cleanTask(); 
                 }
@@ -332,11 +342,15 @@
         <header>
             <table>
                 <tr>
-                    <td style="vertical-align:top;">
+                    <td style="vertical-align:top;" width=342>
                         <h1>Portrait-Robot</h1>
+			<h3><div id="score">...</div><h3>
+                    </td>
+                    <td rowspan=2>
+                        <img id="target" src="blank.png" style="padding:5px" />
                     </td>
                 </tr>
-    			<tr>
+    		<tr>
                     <td style="vertical-align:bottom">
         				<form onsubmit="return submitCodeForm(this);">
                             <label for="code">Code:</label>
@@ -361,24 +375,24 @@
                         <img id="badge3" src="blank.png"  style="padding:5px" />
                     </td>
                 </tr>
-    			<tr>
-    				<td style="text-align: center;">
-        				<form onsubmit="return submitSelectForm(this,'1');">
-            				<button type="submit" class="btn btn-default" id="s1">ô</button>
-        				</form>
-                    </td>
-    				<td style="text-align: center;">
-        				<form onsubmit="return submitSelectForm(this,'2');">
-            				<button type="submit" class="btn btn-default" id="s2">ô</button>
-                        </form>
-                    </td>
-    				<td style="text-align: center;">
-        				<form onsubmit="return submitSelectForm(this,'3');">
-            				<button type="submit" class="btn btn-default" id="s3">ô</button>
-        				</form>
-                    </td>
-    			</tr>
-    		</table>
+		<tr>
+			<td style="text-align: center;">
+				<form onsubmit="return submitSelectForm(this,'1');">
+    				<button type="submit" class="btn btn-default" id="s1">ô</button>
+				</form>
+                    	</td>
+			<td style="text-align: center;">
+				<form onsubmit="return submitSelectForm(this,'2');">
+    				<button type="submit" class="btn btn-default" id="s2">ô</button>
+	                        </form>
+                        </td>
+			<td style="text-align: center;">
+				<form onsubmit="return submitSelectForm(this,'3');">
+    				<button type="submit" class="btn btn-default" id="s3">ô</button>
+				</form>
+                    	</td>
+    		</tr>
+    	    </table>
     	</section>
         <footer>
         <hr /><div id="message">...</div>

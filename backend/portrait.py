@@ -203,7 +203,7 @@ def Get_Score(code):
     if os.path.exists(filepath):
         filepath = os.path.join(path, "vectors.p")
         vectors = pickle.load(open(filepath, "rb"))
-        score = np.float(1-torch.sum((vectors[0]-vectors[2])**2) / 256)
+        score = float(1-torch.sum((vectors[0]-vectors[2])**2) / 256)
     return score
     
 

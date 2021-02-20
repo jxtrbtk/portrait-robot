@@ -2,7 +2,8 @@
 $id = $_GET["id"];
 $code = $_GET["code"];
 $step = $_GET["step"];
-$data = $code."_".$step;
+$score = $_GET["score"];
+$data = $code."_".$step."_".$score;
 
 $filename = "data/out/TASK_".$id.".txt";
 $fd = fopen( $filename, "w" );
