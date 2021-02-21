@@ -119,7 +119,7 @@ def Execute_Task(task_id):
     
 def Is_Best_Score(code, side):
     scores = (0.0, Get_Score(code, side=1), Get_Score(code, side=2), Get_Score(code, side=3))
-    return  (max(scores) == scores[side])
+    return  (max(scores) == scores[int(side)])
 
 
 def Move_Project(code, side):
