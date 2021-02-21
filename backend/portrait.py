@@ -112,7 +112,10 @@ def Execute_Task(task_id):
         params += "&code=" + code
         params += "&step=" + str(step)
         params += "&score=" + "{:.4f}".format(score*100)
-        if best_score : params += "***"
+        if best_score : 
+            params += "&score=" + "+{:.4f}".format(score*100)
+        else:
+            params += "&score=" + "-{:.4f}".format(score*100)
 
     url = PARAM_HOST_BASE_URL + "cTaskFeedback.php?id="+task_id + params
     requests.get(url, timeout=60)
