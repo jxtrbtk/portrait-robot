@@ -95,7 +95,7 @@ def Execute_Task(task_id):
         print(" - generated")
         params += "&code=" + code
         params += "&step=" + str(step)
-        params += "&score=" + "{:.16f}".format(score*100)
+        params += "&score=" + "{:.4f}".format(score*100)
 
     if command["action"] == "select":
         code = command["code"]
