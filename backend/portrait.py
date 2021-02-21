@@ -102,6 +102,7 @@ def Execute_Task(task_id):
         side = command["side"]
         print("  code: {}".format(code))
         print("  side: {}".format(side))
+        best_score = Is_Best_Score(code, side) 
         step = Move_Project(code, side)        
         score = Get_Score(code)
         print(" - moved")
@@ -109,10 +110,17 @@ def Execute_Task(task_id):
         print(" - generated")
         params += "&code=" + code
         params += "&step=" + str(step)
-        params += "&score=" + "{:.16f}".format(score*100)
+        params += "&score=" + "{:.4f}".format(score*100)
+        if best_score : params += "%20+"
 
     url = PARAM_HOST_BASE_URL + "cTaskFeedback.php?id="+task_id + params
     requests.get(url, timeout=60)
+
+    
+def Is_Best_Score(code, side):
+    scores = (0.0, Get_Score(code, side=1), Get_Score(code, side=2), Get_Score(code, side=3))
+    return  (max(scores) == scores[side])
+
 
 def Move_Project(code, side):
     path = os.path.join(PARAM_DATA_FOLDER, "work", code)
@@ -190,14 +198,15 @@ def Initialize_Project(code):
     pickle.dump(vectors, open(filepath, "wb"))
 
     
-def Get_Score(code):
+def Get_Score(code, side=2):
     path = os.path.join(PARAM_DATA_FOLDER, "work", code)
     filepath = os.path.join(path, "vectors.p")
     score = 0
     if os.path.exists(filepath):
         filepath = os.path.join(path, "vectors.p")
         vectors = pickle.load(open(filepath, "rb"))
-        score = float(1-torch.sum((vectors[0]-vectors[2])**2) / 256)
+        score = float(1-torch.sum((vectors[0]-vectors[side])**2) / 256)
+    print("score", side, score)
     return score
     
 
