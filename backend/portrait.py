@@ -131,22 +131,16 @@ def Move_Project(code, side):
     coeff = (0.99**step)
     print(coeff)
 
-    mask = np.random.uniform(-2, 1, size=(sample_size, model.z_size))
+    mask = np.random.uniform(0, 1.5, size=(sample_size, model.z_size))
     mask = torch.from_numpy(mask).float()
 
     delta = np.random.uniform(-1, 1, size=(sample_size, model.z_size))
-    delta = torch.from_numpy(delta).float()
-    delta[mask<0] = vector_selected[mask<0]
-    vector_left  = vector_selected*(1-coeff)-delta*coeff
-    vector_right = vector_selected*(1-coeff)+delta*coeff
-#    vector1 = vector0*(0.5)+vector2*(0.5)
-
-    # delta = np.random.uniform(-1, 1, size=(sample_size, model.z_size))
-    # delta = torch.from_numpy(delta).float()
-    # delta[mask<0] = vector_selected[mask<0]
-    
-#    delta = delta * (-1.0)
-#    vector1 = vector0*(1-coeff)+delta*coeff
+    delta_left  = torch.from_numpy(delta).float()
+    delta_right = torch.from_numpy(-delta).float()
+    delta_left [mask>coeff] = vector_selected[mask>coeff]
+    delta_right[mask>coeff] = vector_selected[mask>coeff]
+    vector_left  = vector_selected*(1-coeff) + delta_left  *coeff
+    vector_right = vector_selected*(1-coeff) + delta_right *coeff
 
     vectors = (vector_target, vector_left, vector_selected, vector_right)
     pickle.dump(vectors, open(filepath, "wb"))
