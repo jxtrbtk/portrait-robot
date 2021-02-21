@@ -103,6 +103,7 @@ def Execute_Task(task_id):
         print("  code: {}".format(code))
         print("  side: {}".format(side))
         best_score = Is_Best_Score(code, side) 
+        print(best_score)
         step = Move_Project(code, side)        
         score = Get_Score(code)
         print(" - moved")
