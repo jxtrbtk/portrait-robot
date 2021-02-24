@@ -109,6 +109,8 @@ def Execute_Task(task_id):
         print(" - moved")
         Generate_Images(code)
         print(" - generated")
+        print("cheat")
+        _, _, _ = Get_Score(code, side=1), Get_Score(code, side=2), Get_Score(code, side=3)
         params += "&code=" + code
         params += "&step=" + str(step)
         if best_score : 
